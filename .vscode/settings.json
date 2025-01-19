@@ -1,0 +1,42 @@
+{
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/.mypy_cache": true
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit",
+            "source.fixAll": "explicit",
+        }
+    },
+    "python.analysis.importFormat": "relative",
+    "black-formatter.args": [
+        "--line-length=100",
+        "--skip-string-normalization"
+    ],
+    "isort.args": [
+        "--profile=black"
+    ],
+    "isort.severity": {
+        "E": "Error"
+    },
+    "mypy-type-checker.ignorePatterns": [
+        "**/site-packages/**/*.py",
+        ".vscode/*.py",
+        "**/models.py",
+    ],
+    "pylint.args": [
+        "--load-plugins",
+        "pylint.extensions.bad_builtin",
+        "--load-plugins",
+        "pylint_django",
+        "--load-plugins",
+        "pylint_django.checkers.migrations",
+        "--ignore=CVS,.git,__pycache__,.mypy_cache,manage.py,tests",
+        "--disable=no-self-argument",
+    ],
+    "pylint.cwd": "${workspaceFolder}/django_cookbook",
+    "python.testing.pytestEnabled": false
+}
