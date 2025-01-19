@@ -49,6 +49,8 @@ repos:
     hooks:
       - id: pylint
         additional_dependencies: [django, pylint-django]
+        env:
+          DJANGO_SETTINGS_MODULE: django_cookbook
         # exclude: .vscode/
         #args:
         #  - '--load-plugins'
