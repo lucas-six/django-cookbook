@@ -65,6 +65,12 @@ pipenv run python django_cookbook/manage.py createsuperuser
 pipenv run python django_cookbook/manage.py runserver [localhost:8000]
 ```
 
+### Debug Toolbar
+
+```bash
+pipenv install --dev django-debug-toolbar
+```
+
 ### Create App
 
 ```bash
@@ -92,3 +98,4 @@ mv app django_cookbook/.
 - [Redis Documentation](https://redis.io/docs/)
 - [`redis-py` Documentation](https://redis.readthedocs.io/en/latest/)
 - [Django Logging](https://docs.djangoproject.com/en/4.2/topics/logging/)
+- [`django-debug-toolbar` Documentation](https://django-debug-toolbar.readthedocs.io/en/latest/)

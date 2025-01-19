@@ -31,7 +31,15 @@ dependencies = [
 dynamic = ["version"]
 
 [project.optional-dependencies]
-test = ["black", "isort", "mymy", "pylint", "pylint-django", "colorlog"]
+test = [
+    "black",
+    "isort",
+    "mymy",
+    "pylint",
+    "pylint-django",
+    "colorlog",
+    "django-debug-toolbar",
+]
 doc = []
 
 [project.urls]
@@ -92,6 +100,10 @@ disallow_untyped_defs = true
 
 [[tool.mypy.overrides]]
 module = "redis.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "debug_toolbar.*"
 ignore_missing_imports = true
 
 [tool.pylint.main]
