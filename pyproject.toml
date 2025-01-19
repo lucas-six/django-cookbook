@@ -26,6 +26,8 @@ dependencies = [
     "redis[hiredis]",
     "types-redis",
 
+    "djangorestframework",
+
     # "flake8-django",
 ]
 dynamic = ["version"]

@@ -9,6 +9,7 @@ django-stubs = {extras = ["compatible-mypy"], version = "*"}
 psycopg = {extras = ["pool", "binary"], version = ">=3.2"}
 redis = {extras = ["hiredis"], version = "*"}
 types-redis = "*"
+djangorestframework = "*"
 
 [dev-packages]
 black = "*"

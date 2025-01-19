@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -91,7 +92,7 @@ DATABASES = {
         #
         # - `None`: unlimitied persistent database connections.
         # - `0` (default): close database connections at the end of each request.
-        'CONN_MAX_AGE': 0,  # in seconds.
+        'CONN_MAX_AGE': 0 if DEBUG else 10,  # in seconds.
         #
         # Setting `CONN_HEALTH_CHECKS` to `True` can be used to improve the robustness of
         # connection reuse and prevent errors when a connection has been closed by the
@@ -304,3 +305,12 @@ if ENABLE_DEBUG_TOOLBAR:
         # Customize the config to support turbo and htmx boosting.
         'ROOT_TAG_EXTRA_ATTRS': 'data-turbo-permanent hx-preserve',
     }
+
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}

@@ -71,6 +71,12 @@ pipenv run python django_cookbook/manage.py runserver [localhost:8000]
 pipenv install --dev django-debug-toolbar
 ```
 
+### Django REST Framework (DRF)
+
+```bash
+pipenv install djangorestframework
+```
+
 ### Create App
 
 ```bash
@@ -99,3 +105,4 @@ mv app django_cookbook/.
 - [`redis-py` Documentation](https://redis.readthedocs.io/en/latest/)
 - [Django Logging](https://docs.djangoproject.com/en/4.2/topics/logging/)
 - [`django-debug-toolbar` Documentation](https://django-debug-toolbar.readthedocs.io/en/latest/)
+- [`django-rest-framework` Home](https://www.django-rest-framework.org/)
