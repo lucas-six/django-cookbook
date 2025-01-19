@@ -24,7 +24,7 @@ repos:
     rev: 24.10.0
     hooks:
       - id: black
-        exclude: migrations/
+        exclude: .*/migrations/.*
         args: ['--verbose']
         # It is recommended to specify the latest version of Python
         # supported by your project here, or alternatively use
@@ -49,9 +49,8 @@ repos:
     hooks:
       - id: pylint
         additional_dependencies: [django, pylint-django]
-        env:
-          DJANGO_SETTINGS_MODULE: django_cookbook
-        # exclude: .vscode/
+        entry: DJANGO_SETTINGS_MODULE="django_cookbook" pylint .
+        exclude: .vscode/
         #args:
         #  - '--load-plugins'
         #  - 'pylint.extensions.bad_builtin'
