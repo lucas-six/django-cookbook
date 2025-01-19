@@ -48,8 +48,8 @@ repos:
     rev: v3.3.3
     hooks:
       - id: pylint
-        #additional_dependencies: [django, pylint-django, psycopg]
-        #exclude: .vscode/
+        additional_dependencies: [django, pylint-django]
+        # exclude: .vscode/
         #args:
         #  - '--load-plugins'
         #  - 'pylint.extensions.bad_builtin'
