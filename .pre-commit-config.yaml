@@ -1,7 +1,7 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 default_language_version:
-  python: python3.11
+  python: python3.12
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -23,27 +23,28 @@ repos:
         exclude: manage.py
       - id: name-tests-test
         args: [--django]
-  - repo: https://github.com/psf/black
-    rev: 24.10.0
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.8
     hooks:
-      - id: black
-        exclude: .*/migrations/.*
-        args: ['--verbose']
-  - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.14.0
     hooks:
       - id: mypy
         exclude: (manage.py|models.py|(migrations/))
-        additional_dependencies: [django, 'django-stubs[compatible-mypy]']
-        language_version: python3.11
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.19.1
-    hooks:
-      - id: pyupgrade
+        additional_dependencies:
+          [
+            django,
+            'django-stubs[compatible-mypy]',
+            'djangorestframework',
+            'djangorestframework-stubs',
+            'django-filter',
+            'django-filter-stubs',
+          ]
 
 ci:
   autofix_prs: true

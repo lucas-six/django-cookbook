@@ -19,10 +19,12 @@ class AAdmin(admin.ModelAdmin):
         'is_active',
         'created_time',
         'updated_time',
+        'group',
+        'remark',
     )
     list_editable = ['is_active']
     list_filter = ('is_active', 'updated_time', 'created_time')
-    search_fields = ('name', 'uuid', 'nickname')
+    search_fields = ('name', 'uuid', 'nickname', 'group__name', 'remark')
 
 
 @admin.register(B)
