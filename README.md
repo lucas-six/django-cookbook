@@ -2,86 +2,70 @@
 
 [How to Read **"Django"**](https://lucas-six.github.io/django-cookbook/audio/django_pronunciation.mp3)
 
+## Target
+
+- Python 3.12 with Django 4.2 (DRF)
+- Database: PostgreSQL 16
+- Cache: Redis 7
+- Linting & Type Checking: Ruff, Mypy
+- Colorful Logging
+- Debug Toolbar
+
 ## Quick Start
 
-### Setup
+### Requirements
 
-```bash
-pipenv --python 3.11
-pipenv install --dev black isort mypy pylint
-
-pipenv install "django~=4.2"
-pipenv install "django-stubs[compatible-mypy]"
-pipenv install --dev pylint-django
-#pipenv install --dev flake8-django
-
-$ pipenv run django-admin version
-4.2.7
-
-pipenv run django-admin startproject django_cookbook
-```
+- Python 3.12
+- PostgreSQL 16
+- Redis 7
 
 ### Database (PostgreSQL)
-
-```bash
-pipenv install 'psycopg[binary, pool]>=3.2'
-```
 
 ```ini
 # postgresql.conf
 
+#listen_addresses = 'localhost'  # '*' for all
+#port = 5432
+max_connections = 1024
+password_encryption = scram-sha-256
 client_encoding = 'UTF8'
 default_transaction_isolation = 'read committed'
 timezone = 'UTC'
 ```
 
-### Cache (Redis)
+### Setup
 
 ```bash
-pipenv install redis[hiredis] types-redis
-```
+cp -r pyproject.toml lint.bash .pre-commit-config.yaml .vscode/ <target-path>
 
-### Logging
+# Modify pyproject.toml
 
-```bash
-pipenv install --dev colorlog
+cd <target-path>
+uv sync
+
+$ uv run --env-file .env django-admin version
+4.2.x
+
+uv run --env-file .env django-admin startproject <target-project>
+
+# Create App
+uv run --env-file .env python <target-project>/manage.py startapp <app_name>
+mv <app_name> <target-project>/.
+
+# Modify settings.py
+
+# Run
+uv run --env-file .env python <target-project>/manage.py makemigrations
+uv run --env-file .env python <target-project>/manage.py migrate
+uv run --env-file .env python <target-project>/manage.py createsuperuser
+uv run --env-file .env python <target-project>/manage.py runserver [localhost:8000]
 ```
 
 ### Lint
 
 ```bash
-pipenv run black .
-pipenv run isort .
-pipenv run mypy .
-DJANGO_SETTINGS_MODULE="django_cookbook" pipenv run pylint .
-```
-
-### Run
-
-```bash
-pipenv run python django_cookbook/manage.py makemigrations
-pipenv run python django_cookbook/manage.py migrate
-pipenv run python django_cookbook/manage.py createsuperuser
-pipenv run python django_cookbook/manage.py runserver [localhost:8000]
-```
-
-### Debug Toolbar
-
-```bash
-pipenv install --dev django-debug-toolbar
-```
-
-### Django REST Framework (DRF)
-
-```bash
-pipenv install djangorestframework
-```
-
-### Create App
-
-```bash
-pipenv run python django_cookbook/manage.py startapp <app_name>
-mv app django_cookbook/.
+chmod u+x lint.bash
+./lint.bash
 ```
 
 ## More

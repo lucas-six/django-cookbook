@@ -1,11 +1,35 @@
 """Models."""
 
 import uuid
+from typing import override
 
+from django.conf import settings
+from django.contrib.auth.models import Group
 from django.db import models
 
 
-class A(models.Model):
+class BasicModel(models.Model):
+    """Basic Model."""
+
+    # id = models.BigAutoField(primary_key=True)
+    is_active = models.BooleanField('is active', default=True)
+    created_time = models.DateTimeField('created time', auto_now_add=True)
+    updated_time = models.DateTimeField('updated time', auto_now=True)
+    group = models.ForeignKey(
+        Group, on_delete=models.CASCADE, verbose_name='Group', null=True, blank=True
+    )
+    remark = models.TextField('Remark', max_length=settings.MODEL_REMARK_MAXLEN, blank=True)
+    detail = models.JSONField('Detail', null=True, blank=True)
+
+    @override
+    def __str__(self) -> str:
+        return f'BasicModel ({self.pk})'
+
+    class Meta:
+        abstract = True
+
+
+class A(BasicModel):
     """A"""
 
     SEXES = (
@@ -13,8 +37,6 @@ class A(models.Model):
         ('F', 'Female'),
         ('-', '-'),
     )
-
-    # id = models.BigAutoField(primary_key=True)
 
     # UUIDField
     # for PostgreSQL: uuid datatype
@@ -34,19 +56,16 @@ class A(models.Model):
     balance = models.DecimalField('balance', max_digits=8, decimal_places=2, default=0.0)
     score = models.PositiveIntegerField('score', default=0)
 
-    is_active = models.BooleanField('is active', default=True)
-    created_time = models.DateTimeField('created time', auto_now_add=True)
-    updated_time = models.DateTimeField('updated time', auto_now=True)
-
+    @override
     def __str__(self) -> str:
-        return f'{self.name} ({self.id})'  # pyright: ignore[reportAttributeAccessIssue]
+        return f'{self.name} ({self.pk})'
 
     class Meta:
-        # abstract = True
         # ordering = ['name']
         verbose_name = 'A'
         verbose_name_plural = 'As'
 
+    @override
     def save(self, *args, **kwargs) -> None:
         # do_something()
         super().save(*args, **kwargs)  # Call the "real" save() method.
@@ -58,8 +77,9 @@ class B(models.Model):
 
     a = models.ForeignKey(A, on_delete=models.CASCADE, verbose_name='A')
 
+    @override
     def __str__(self) -> str:
-        return f'{self.a.name} ({self.id})'  # pyright: ignore[reportAttributeAccessIssue]
+        return f'{self.a.name} ({self.pk})'
 
     class Meta:
         verbose_name = 'B'

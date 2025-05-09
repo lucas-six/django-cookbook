@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
+from typing import Any
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'rest_framework',
+    'django_filters',
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
 
 MIDDLEWARE = [
@@ -134,9 +138,11 @@ LANGUAGE_CODE = 'zh-hans'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
+USE_I18N = False
 
 USE_TZ = True
+
+DATE_FORMAT = 'Y-m-d'  # 2025-01-01
 
 
 # Static files (CSS, JavaScript, Images)
@@ -197,24 +203,12 @@ CACHES = {
 # Logging
 # https://docs.djangoproject.com/en/4.2/topics/logging/
 
-LOGGING = {
+LOGGING: dict[str, Any] = {
     'version': 1,
     'disable_existing_loggers': True,
     'formatters': {
         'info': {
             'format': '[%(levelname)s] [%(asctime)s] %(message)s',
-        },
-        'debug': {
-            'format': '%(log_color)s[%(asctime)s][%(name)s]'
-            + ' [%(threadName)s:%(thread)d] %(message)s',
-            'class': 'colorlog.ColoredFormatter',
-            'log_colors': {
-                'DEBUG': 'cyan white',
-                'INFO': 'green',
-                'WARNING': 'yellow',
-                'ERROR': 'red',
-                'CRITICAL': 'bold_red',
-            },
         },
     },
     'filters': {
@@ -231,38 +225,64 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'info',
         },
-        'console_debug': {
-            'filters': ['require_debug_true'],
-            'class': 'logging.StreamHandler',
-            'formatter': 'debug',
-        },
     },
     'loggers': {
-        'django': {
-            'handlers': ['console_debug'],
-            'propagate': True,
-        },
-        'django.request': {
-            'handlers': ['console_debug'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
+        # 'django': {
+        #     'handlers': ['console_debug'],
+        #     'propagate': False,
+        #     'level': 'INFO' if DEBUG else 'WARNING',
+        # },
         '': {
-            'handlers': ['console', 'console_debug'],
-            'level': os.environ['LOG_LEVEL'],
-        },
-        'requests': {
-            'handlers': ['console_debug'],
+            'handlers': ['console'],
             'level': 'INFO',
-            'propagate': False,
         },
-        'elasticsearch': {
-            'handlers': ['console_debug'],
-            'level': 'INFO',
-            'propagate': False,
-        },
+        # 'requests': {
+        #     'handlers': ['console_debug'],
+        #     'level': 'INFO',
+        #     'propagate': False,
+        # },
+        # 'elasticsearch': {
+        #     'handlers': ['console_debug'],
+        #     'level': 'INFO',
+        #     'propagate': False,
+        # },
     },
 }
+if DEBUG:
+    LOGGING_DEBUG_FORMATTER_NAME = 'debug'
+    LOGGING_DEBUG_HANDLER_NAME = 'console_debug'
+
+    LOGGING['formatters'][LOGGING_DEBUG_FORMATTER_NAME] = {
+        'format': '%(log_color)s[%(asctime)s][%(name)s] [%(threadName)s:%(thread)d] %(message)s',
+        'class': 'colorlog.ColoredFormatter',
+        'log_colors': {
+            'DEBUG': 'cyan white',
+            'INFO': 'green',
+            'WARNING': 'yellow',
+            'ERROR': 'red',
+            'CRITICAL': 'bold_red',
+        },
+    }
+
+    LOGGING['handlers'][LOGGING_DEBUG_HANDLER_NAME] = {
+        'filters': ['require_debug_true'],
+        'class': 'logging.StreamHandler',
+        'formatter': LOGGING_DEBUG_FORMATTER_NAME,
+    }
+
+    LOGGING['loggers']['']['handlers'].append(LOGGING_DEBUG_HANDLER_NAME)
+    LOGGING['loggers']['']['level'] = 'DEBUG'
+    LOGGING['loggers']['django.utils.autoreload'] = {
+        'handlers': [LOGGING_DEBUG_HANDLER_NAME],
+        'propagate': False,
+        'level': 'WARNING',
+    }
+
+
+# CSRF
+#
+# CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'  # HTTP header: X-CSRFToken
+# CSRF_COOKIE_AGE = 31449600  # in seconds
 
 
 # Debug Toolbar
@@ -270,8 +290,8 @@ LOGGING = {
 # Only enable the toolbar when we're in debug mode and we're
 # not running tests. Django will change DEBUG to be False for
 # tests, so we can't rely on DEBUG alone.
-ENABLE_DEBUG_TOOLBAR = DEBUG
-if ENABLE_DEBUG_TOOLBAR:
+DEBUG_TOOLBAR = bool(os.environ.get('DEBUG_TOOLBAR', DEBUG))
+if DEBUG_TOOLBAR:
     INSTALLED_APPS = [
         *INSTALLED_APPS,
         'debug_toolbar',
@@ -307,10 +327,48 @@ if ENABLE_DEBUG_TOOLBAR:
     }
 
 
+# Django REST Framwork (DRF)
+#
+IGN_PERM = bool(os.environ.get('IGN_PERM', False))
+
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
+    #
+    # Pagination
+    #
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    #
+    # Filter
+    #
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
+    #
+    # Auth
+    #
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        #'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',  # AJAX, Django default
+    ],
+    #
+    # Permission
+    #
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+        (
+            'rest_framework.permissions.AllowAny'
+            if IGN_PERM
+            else 'rest_framework.permissions.DjangoModelPermissions'
+        ),
+    ],
 }
+
+
+# crispy-forms
+#
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+
+MODEL_REMARK_MAXLEN = int(os.environ.get('MODEL_REMARK_MAXLEN', 512))

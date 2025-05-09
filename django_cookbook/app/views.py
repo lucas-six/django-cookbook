@@ -3,8 +3,11 @@
 import logging
 from collections import OrderedDict
 
+from django.contrib.auth.decorators import permission_required
 from django.core.cache import cache
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
+from django.middleware.csrf import get_token
+from django.views.decorators.http import require_http_methods, require_safe
 
 from .models import A
 
@@ -14,9 +17,13 @@ CACHE_TIMEOUT = 10
 logger = logging.getLogger()
 
 
+@require_safe
 def index(request: HttpRequest) -> HttpResponse:
     """index"""
-    return HttpResponse('Hello, world.')
+    msg = 'hello world.'
+    logger.debug(msg)
+    logger.info(msg)
+    return HttpResponse(msg)
 
 
 def api_get(request: HttpRequest) -> JsonResponse:
@@ -33,6 +40,22 @@ def api_get(request: HttpRequest) -> JsonResponse:
     return JsonResponse(
         {'a.name': a.name, 'a_list': a_list}, json_dumps_params={'ensure_ascii': False}
     )
+
+
+@require_http_methods(['GET', 'POST', 'PUT'])
+@permission_required('auth.del_user')
+def api_post_put(request: HttpRequest) -> JsonResponse:
+    """API: POST/PUT (CSRF)"""
+    request_method = request.method
+    if request_method == 'GET':
+        csrf_token = get_token(request)
+        logger.debug(f'{csrf_token=}, {request_method=}')
+        return JsonResponse({'csrf_token': csrf_token})
+
+    if request_method in ('POST', 'PUT'):
+        return JsonResponse({'ok': True, 'method': request_method})
+
+    raise Http404()
 
 
 def use_cache(request: HttpRequest) -> HttpResponse:
