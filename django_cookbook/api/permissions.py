@@ -6,7 +6,7 @@ from django.http import HttpRequest
 from rest_framework.permissions import BasePermission
 
 
-class IsAdminUser(BasePermission):
+class IsAdminUser(metaclass=BasePermission):
     """
     Allows access only to superuser users.
     """
