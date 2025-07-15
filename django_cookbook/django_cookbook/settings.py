@@ -104,6 +104,8 @@ DATABASES = {
         # Since Django 4.1
         'CONN_HEALTH_CHECKS': True,
         'OPTIONS': {
+            'application_name': 'django_cookbook',
+            'connect_timeout': float(os.environ.get('DB_CONN_TIMEOUT_SYNC_CIA', 5.0)),
             #'pool': True,  # Django 5.0+
             'server_side_binding': True,
         },
