@@ -2,11 +2,11 @@
 
 [How to Read **"Django"**](https://lucas-six.github.io/django-cookbook/audio/django_pronunciation.mp3)
 
-## Target
+## Target Environment
 
 - Python 3.12 with Django 4.2 (DRF)
 - Database: PostgreSQL 16
-- Cache: Redis 7
+- Cache: Redis 7/8
 - Linting & Type Checking: Ruff, Mypy
 - Colorful Logging
 - Debug Toolbar
@@ -16,8 +16,8 @@
 ### Requirements
 
 - Python 3.12
-- PostgreSQL 16
-- Redis 7
+- PostgreSQL 16 (See [Setup PostgreSQL](https://lucas-six.github.io/linux-cookbook/cookbook/admin/postgresql/postgresql_setup))
+- Redis 7/8 (See [Setup Redis](https://lucas-six.github.io/linux-cookbook/cookbook/admin/redis/redis_setup))
 
 ### Database (PostgreSQL)
 
@@ -70,10 +70,8 @@ chmod u+x lint.bash
 
 ## More
 
-- [PostgreSQL Setup - Linux Cookbook](https://lucas-six.github.io/linux-cookbook/cookbook/admin/postgresql/postgresql_setup)
 - [PostgreSQL CLI: `psql` Usage - Linux Cookbook](https://lucas-six.github.io/linux-cookbook/cookbook/admin/postgresql/postgresql_usage)
-- [Redis Setup - Linux Cookbook](https://lucas-six.github.io/linux-cookbook/cookbook/admin/redis/redis_setup)
-- [CLI: `redis-cli` Basic Usage - Linux Cookbook](https://lucas-six.github.io/linux-cookbook/cookbook/admin/redis/redis_usage_basic)
+- [Redis CLI: `redis-cli` Basic Usage - Linux Cookbook](https://lucas-six.github.io/linux-cookbook/cookbook/admin/redis/redis_usage_basic)
 - [Redis Python API: `redis-py` - Python Coobook](https://lucas-six.github.io/python-cookbook/cookbook/system_services/redis)
 - [Logging Usage - Python Cookbook](https://lucas-six.github.io/python-cookbook/cookbook//core/logging/logging_usage)
 - [Logging Dictionary Configuration - Python Cookbook](https://lucas-six.github.io/python-cookbook/cookbook//core/logging/logging_dict_config)
