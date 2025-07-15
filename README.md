@@ -19,20 +19,6 @@
 - PostgreSQL 16 (See [Setup PostgreSQL](https://lucas-six.github.io/linux-cookbook/cookbook/admin/postgresql/postgresql_setup))
 - Redis 7/8 (See [Setup Redis](https://lucas-six.github.io/linux-cookbook/cookbook/admin/redis/redis_setup))
 
-### Database (PostgreSQL)
-
-```ini
-# postgresql.conf
-
-#listen_addresses = 'localhost'  # '*' for all
-#port = 5432
-max_connections = 1024
-password_encryption = scram-sha-256
-client_encoding = 'UTF8'
-default_transaction_isolation = 'read committed'
-timezone = 'UTC'
-```
-
 ### Setup
 
 ```bash
