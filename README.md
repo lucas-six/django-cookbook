@@ -4,9 +4,9 @@
 
 ## Target Environment
 
-- Python 3.12 with Django 4.2 (DRF)
+- Python 3.13 with Django 4.2 (DRF)
 - Database: PostgreSQL 16
-- Cache: Redis 7/8
+- Cache: Redis 8
 - Linting & Type Checking: Ruff, Mypy
 - Colorful Logging
 - Debug Toolbar
@@ -15,7 +15,7 @@
 
 ### Requirements
 
-- Python 3.12
+- Python 3.13
 - PostgreSQL 16 (See [Setup PostgreSQL](https://lucas-six.github.io/linux-cookbook/cookbook/admin/postgresql/postgresql_setup))
 - Redis 7/8 (See [Setup Redis](https://lucas-six.github.io/linux-cookbook/cookbook/admin/redis/redis_setup))
 
